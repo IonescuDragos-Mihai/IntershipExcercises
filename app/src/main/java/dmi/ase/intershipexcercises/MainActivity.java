@@ -3,12 +3,25 @@ package dmi.ase.intershipexcercises;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.media.Image;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.IOException;
+import java.util.List;
+
+import dmi.ase.intershipexcercises.retrofit.Post;
+import dmi.ase.intershipexcercises.retrofit.server.ServerProvider;
+import dmi.ase.intershipexcercises.thread.DownloaderUtil;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG=MainActivity.class.getSimpleName();
@@ -16,12 +29,17 @@ public class MainActivity extends AppCompatActivity {
     private TextView incremendTv;
     private Button incrementButton;
     private static  final String KEY_PARSE_COUNTER="key";
+    private ImageView imageDownload;
+
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.image_download_layout);
+        imageDownload=findViewById(R.id.image_download);
 
         Log.d(TAG,"Happy to be born!");
         initViews();
@@ -31,19 +49,79 @@ public class MainActivity extends AppCompatActivity {
             incremendTv.setText(savedInstanceState.getString(KEY_PARSE_COUNTER));
         }}
 
+        //retrofit
+
+      //  getPostSynchrously();
+
+
+        getPostAsynchrously();
+        
+        
+        getImageUsingThread();
+        getImageUsingExecutor();
     }
+
+    private void getImageUsingThread() {
+        Handler handler = new Handler();
+
+        final Runnable r = new Runnable() {
+            public void run() {
+               imageDownload.setImageBitmap(DownloaderUtil.INSTANCE.downloadImage());
+            }
+        };
+
+        handler.postDelayed(r, 1000);
+    }
+
+    private void getImageUsingExecutor() {
+    }
+    
+    
+
+    private void getPostAsynchrously() {
+        ServerProvider.createPostService().getPosts().enqueue(new Callback<List<Post>>() {
+            @Override
+            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+                List<Post> posts=response.body();
+                if(posts!=null){
+                    Log.d(TAG,"there are "+posts.size());
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Post>> call, Throwable t) {
+                Log.e(TAG,"error trying to get posts");
+            }
+        });
+    }
+
+//    private void getPostSynchrously() {
+//        try {
+//            Response<List<Post>> response= ServerProvider.createPostService().getPosts().execute();
+//            List<Post> list=response.body();
+//
+//            if(list!=null){
+//                Log.d(TAG,"there are "+list.size());
+//            }
+//        } catch (IOException e) {
+//            Log.e(TAG,"error trying to get posts");
+//
+//        }
+//    }
+
     private void initViews(){
             incremendTv=findViewById(R.id.counter_value_tv);
             incrementButton=findViewById(R.id.increment_btn);
 
-            incremendTv.setText(String.valueOf(incrementValue));
-            incrementButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    incrementValue++;
-                    incremendTv.setText(String.valueOf(incrementValue));
-                }
-            });
+//            incremendTv.setText(String.valueOf(incrementValue));
+//            incrementButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    incrementValue++;
+//                    incremendTv.setText(String.valueOf(incrementValue));
+//                }
+//            });
     }
 
     @Override

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/list_item_icon"
+        android:layout_width="@dimen/list_item_icon_size"
+        android:layout_height="@dimen/list_item_icon_size"
+        android:padding="@dimen/padding_16"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_baseline_restaurant_24"
+        />
+
+    <TextView
+        android:id="@+id/list_item_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.AppCompat.Title"
+        android:paddingStart="@dimen/padding_16"
+        android:paddingEnd="@dimen/padding_16"
+        android:paddingTop="@dimen/padding_16"
+        android:text="@string/restaurant_title"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_toEndOf="@id/list_item_icon"
+
+        />
+
+    <TextView
+        android:id="@+id/list_item_subtitle"
+        style="@style/TextAppearance.AppCompat.Subhead"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/list_item_icon"
+        android:layout_below="@+id/list_item_title"
+        android:alpha="0.6"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:paddingStart="@dimen/padding_16"
+        android:paddingEnd="@dimen/padding_16"
+        android:paddingBottom="@dimen/padding_16"
+        android:text="@string/restaurant_subtitle"
+        android:textSize="@dimen/subtitle_size" />
+
+
+</RelativeLayout>
