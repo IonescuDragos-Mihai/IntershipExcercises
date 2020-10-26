@@ -13,6 +13,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -23,7 +31,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements  OnMapReadyCallback{
     public static final String TAG=MainActivity.class.getSimpleName();
     private int  incrementValue=0;
     private TextView incremendTv;
@@ -38,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.image_download_layout);
+        setContentView(R.layout.activity_main);
         imageDownload=findViewById(R.id.image_download);
 
         Log.d(TAG,"Happy to be born!");
@@ -59,18 +67,29 @@ public class MainActivity extends AppCompatActivity {
         
         getImageUsingThread();
         getImageUsingExecutor();
+
+
+        MapView mapView=findViewById(R.id.map);
+        mapView.onCreate(savedInstanceState);
+        mapView.onResume();
+
+        mapView.getMapAsync((OnMapReadyCallback)this);
+
     }
 
+
+
+
     private void getImageUsingThread() {
-        Handler handler = new Handler();
-
-        final Runnable r = new Runnable() {
-            public void run() {
-               imageDownload.setImageBitmap(DownloaderUtil.INSTANCE.downloadImage());
-            }
-        };
-
-        handler.postDelayed(r, 1000);
+//        Handler handler = new Handler();
+//
+//        final Runnable r = new Runnable() {
+//            public void run() {
+//               imageDownload.setImageBitmap(DownloaderUtil.INSTANCE.downloadImage());
+//            }
+//        };
+//
+//        handler.postDelayed(r, 1000);
     }
 
     private void getImageUsingExecutor() {
@@ -79,21 +98,21 @@ public class MainActivity extends AppCompatActivity {
     
 
     private void getPostAsynchrously() {
-        ServerProvider.createPostService().getPosts().enqueue(new Callback<List<Post>>() {
-            @Override
-            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
-                List<Post> posts=response.body();
-                if(posts!=null){
-                    Log.d(TAG,"there are "+posts.size());
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Post>> call, Throwable t) {
-                Log.e(TAG,"error trying to get posts");
-            }
-        });
+//        ServerProvider.createPostService().getPosts().enqueue(new Callback<List<Post>>() {
+//            @Override
+//            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+//                List<Post> posts=response.body();
+//                if(posts!=null){
+//                    Log.d(TAG,"there are "+posts.size());
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Post>> call, Throwable t) {
+//                Log.e(TAG,"error trying to get posts");
+//            }
+//        });
     }
 
 //    private void getPostSynchrously() {
@@ -164,5 +183,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         incremendTv.setText(savedInstanceState.getString(KEY_PARSE_COUNTER));
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        LatLng coord=new LatLng(46/76766919,23.5709693);
+        googleMap.addMarker(new MarkerOptions().position(coord));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coord,16));
     }
 }

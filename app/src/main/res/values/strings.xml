@@ -2,6 +2,7 @@
     <string name="app_name">InternshipExcercises</string>
     <string name="label_increment">Number of clicks</string>
     <string name="restaurant_title">Restaurant Title</string>
-    <string name="restaurant_subtitle">Restaurant subtitle text   Restaurant subtitle textRestaurant subtitle
-        textRestaurant subtitle textRestaurant subtitle text</string>
+    <string name="restaurant_subtitle">Restaurant subtitle</string>
+    <string name="favorite">Favorite</string>
+    <string name="action_settings">Settings</string>
 </resources>
